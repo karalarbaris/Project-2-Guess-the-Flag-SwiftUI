@@ -20,40 +20,48 @@ struct ContentView: View {
     
     var body: some View {
         
-        ZStack {
+        NavigationView {
             
-            Color.blue.edgesIgnoringSafeArea(.all)
-            VStack(spacing:30) {
+            ZStack {
                 
-                VStack(spacing:10) {
-                    Text("Tap the flag of")
-                        .foregroundColor(.white)
-                    Text("\(countries[correctAnswer])")
-                        .foregroundColor(.white)
+                LinearGradient(gradient: Gradient(colors: [.purple, .black]), startPoint: .top, endPoint: .bottom)
+                    .edgesIgnoringSafeArea(.all)
+                
+                VStack(spacing:30) {
+                    
+                    VStack(spacing:10) {
+                        Text("Tap the flag of")
+                            .foregroundColor(.white)
+                        Text("\(countries[correctAnswer])")
+                            .foregroundColor(.white)
+                            .fontWeight(.black)
+                            .font(.largeTitle)
+                    }
+                    
+                    ForEach(0 ..< 3) { number in
+                        Button(action: {
+                            //Button was tapped
+                            flagTapped(number)
+                            
+                        }, label: {
+                            Image(countries[number])
+                                .renderingMode(.original)
+                        })
+                        .clipShape(Capsule())
+                        .overlay(Capsule().stroke(Color.black, lineWidth: 1))
+                        .shadow(color: .black, radius: 2, x: 0, y: 0)
+                    }
+                    
+                    Spacer()
                 }
-                
-                ForEach(0 ..< 3) { number in
-                    Button(action: {
-                        //Button was tapped
-                        flagTapped(number)
-                        
-                    }, label: {
-                        Image(countries[number])
-                            .renderingMode(.original)
-                    })
-                }
-                
-                Spacer()
             }
+            .alert(isPresented: $showingScore, content: {
+                Alert(title: Text(scoreTitle), message: Text("Your score is ???"), dismissButton: .default(Text("Countinue"), action: {
+                    askQuestion()
+                }))
+            })
         }
-        .alert(isPresented: $showingScore, content: {
-            Alert(title: Text(scoreTitle), message: Text("Your score is ???"), dismissButton: .default(Text("Countinue"), action: {
-                askQuestion()
-            }))
-        })
-        
-        
-        
+    
         
     }
 
