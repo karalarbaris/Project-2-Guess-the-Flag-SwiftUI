@@ -7,12 +7,26 @@
 
 import SwiftUI
 
-//Showing alert messages
+struct FlagImage: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .clipShape(Capsule())
+            .overlay(Capsule().stroke(Color.black, lineWidth: 1))
+            .shadow(color: .black, radius: 2, x: 0, y: 0)
+        
+    }
+}
+
+extension View {
+    func flagImage() -> some View {
+        self.modifier(FlagImage())
+    }
+}
 
 struct ContentView: View {
     
     @State private var countries = ["Estonia", "France", "Germany", "Ireland",
-                     "Italy", "Nigeria", "Poland", "Russia", "Spain", "UK", "US"].shuffled()
+                                    "Italy", "Nigeria", "Poland", "Russia", "Spain", "UK", "US"].shuffled()
     @State private var correctAnswer = Int.random(in: 0...2)
     
     @State private var showingScore = false
@@ -22,9 +36,7 @@ struct ContentView: View {
     var body: some View {
         
         NavigationView {
-            
             ZStack {
-                
                 LinearGradient(gradient: Gradient(colors: [.purple, .black]), startPoint: .top, endPoint: .bottom)
                     .edgesIgnoringSafeArea(.all)
                 
@@ -39,7 +51,19 @@ struct ContentView: View {
                             .font(.largeTitle)
                     }
                     
-                    ForEach(0 ..< 3) { number in
+                    
+                    
+                    Button(action: {
+                        //Button was tapped
+                        flagTapped(0)
+                        
+                    }, label: {
+                        Image(countries[0])
+                            .renderingMode(.original)
+                    })
+                    .flagImage()
+                    
+                    ForEach(1 ..< 3) { number in
                         Button(action: {
                             //Button was tapped
                             flagTapped(number)
@@ -64,10 +88,10 @@ struct ContentView: View {
                 }))
             })
         }
-    
+        
         
     }
-
+    
     func flagTapped(_ number: Int) {
         if number == correctAnswer {
             scoreTitle = "Correct"
