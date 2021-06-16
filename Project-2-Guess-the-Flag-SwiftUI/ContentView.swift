@@ -34,6 +34,7 @@ struct ContentView: View {
     @State private var userScore = 0
     
     @State private var animationAmountForButtons = [0.0, 0.0, 0.0]
+    @State private var opacityAmountForButtons = [1.0, 1.0, 1.0]
     
     var body: some View {
         
@@ -80,6 +81,7 @@ struct ContentView: View {
                             .degrees(animationAmountForButtons[number]),
                             axis: (x: 0.0, y: 1.0, z: 0.0)
                         )
+                        .opacity(opacityAmountForButtons[number])
                     }
                     
                     Text("Current score is \(userScore)")
@@ -103,6 +105,8 @@ struct ContentView: View {
             userScore += 1
             withAnimation {
                 animationAmountForButtons[number] += 360
+                opacityAmountForButtons = [0.25, 0.25, 0.25]
+                opacityAmountForButtons[number] = 1
             }
         } else {
             scoreTitle = "Wrong! That’s the flag of \(countries[number])"
@@ -114,6 +118,7 @@ struct ContentView: View {
     func askQuestion() {
         countries.shuffle()
         correctAnswer = Int.random(in: 0...2)
+        opacityAmountForButtons = [1.0, 1.0, 1.0]
     }
     
 }
