@@ -33,6 +33,8 @@ struct ContentView: View {
     @State private var scoreTitle = ""
     @State private var userScore = 0
     
+    @State private var animationAmountForButtons = [0.0, 0.0, 0.0]
+    
     var body: some View {
         
         NavigationView {
@@ -51,22 +53,21 @@ struct ContentView: View {
                             .font(.largeTitle)
                     }
                     
+//                    Button(action: {
+//                        //Button was tapped
+//                        flagTapped(0)
+//
+//                    }, label: {
+//                        Image(countries[0])
+//                            .renderingMode(.original)
+//                    })
+//                    .flagImage()
                     
-                    
-                    Button(action: {
-                        //Button was tapped
-                        flagTapped(0)
-                        
-                    }, label: {
-                        Image(countries[0])
-                            .renderingMode(.original)
-                    })
-                    .flagImage()
-                    
-                    ForEach(1 ..< 3) { number in
+                    ForEach(0 ..< 3) { number in
                         Button(action: {
                             //Button was tapped
                             flagTapped(number)
+                            
                             
                         }, label: {
                             Image(countries[number])
@@ -75,6 +76,10 @@ struct ContentView: View {
                         .clipShape(Capsule())
                         .overlay(Capsule().stroke(Color.black, lineWidth: 1))
                         .shadow(color: .black, radius: 2, x: 0, y: 0)
+                        .rotation3DEffect(
+                            .degrees(animationAmountForButtons[number]),
+                            axis: (x: 0.0, y: 1.0, z: 0.0)
+                        )
                     }
                     
                     Text("Current score is \(userScore)")
@@ -96,6 +101,9 @@ struct ContentView: View {
         if number == correctAnswer {
             scoreTitle = "Correct"
             userScore += 1
+            withAnimation {
+                animationAmountForButtons[number] += 360
+            }
         } else {
             scoreTitle = "Wrong! That’s the flag of \(countries[number])"
             userScore -= 1
